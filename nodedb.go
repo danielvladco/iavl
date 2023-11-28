@@ -313,25 +313,6 @@ func (ndb *nodeDB) saveFastNodeUnlocked(node *FastNode, shouldAddToCache bool) e
 	return nil
 }
 
-// Has checks if a hash exists in the database.
-func (ndb *nodeDB) Has(hash []byte) (bool, error) {
-	key := ndb.nodeKey(hash)
-
-	if ldb, ok := ndb.db.(*dbm.GoLevelDB); ok {
-		exists, err := ldb.DB().Has(key, nil)
-		if err != nil {
-			return false, err
-		}
-		return exists, nil
-	}
-	value, err := ndb.db.Get(key)
-	if err != nil {
-		return false, err
-	}
-
-	return value != nil, nil
-}
-
 // SaveBranch saves the given node and all of its descendants.
 // NOTE: This function clears leftNode/rigthNode recursively and
 // calls _hash() on the given node.
